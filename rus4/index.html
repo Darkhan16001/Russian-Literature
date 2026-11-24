@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>2.1.1. М. Ю. Лермонтов — Родина</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<aside id="sidebar">
+
+    <div class="brand">
+        <div class="logo">📖</div>
+        <h2>РУССКИЙ ЯЗЫК</h2>
+        <p>И ЛИТЕРАТУРА</p>
+        <small>1 КУРС · 80 МИНУТ</small>
+    </div>
+
+    <div class="sidebar-scroll">
+
+        <section class="panel">
+            <strong id="pageNumber">1 / 20</strong>
+
+            <div class="two">
+                <button id="prev" onclick="move(-1)">
+                    ← Назад
+                </button>
+
+                <button id="next" onclick="move(1)">
+                    Далее →
+                </button>
+            </div>
+        </section>
+
+        <section class="panel" id="actions"></section>
+
+        <section class="panel">
+            <div class="label">МАСШТАБ ЭКРАНА</div>
+
+            <div class="zoom">
+                <button onclick="changeZoom(-10)">−</button>
+                <strong id="zoomValue">100%</strong>
+                <button onclick="changeZoom(10)">+</button>
+            </div>
+
+            <button onclick="resetZoom()">
+                ↻ Сброс масштаба
+            </button>
+
+            <button onclick="fullscreen()">
+                ⛶ Полный экран
+            </button>
+
+            <button onclick="toggleMenu()">
+                ◀ Скрыть меню
+            </button>
+        </section>
+
+        <section class="panel">
+
+            <div class="label">ТАЙМЕР ЗАНЯТИЯ</div>
+
+            <strong id="timer">80:00</strong>
+
+            <div id="timerStage">
+                Теория: 40:00
+            </div>
+
+            <div class="two">
+                <button id="timerButton" onclick="toggleTimer()">
+                    Старт
+                </button>
+
+                <button onclick="resetTimer()">
+                    Сброс
+                </button>
+            </div>
+
+        </section>
+
+        <section class="panel">
+            <div class="label">ПРИСУТСТВУЮТ</div>
+
+            <strong id="attendance">12 / 25</strong>
+
+            <button onclick="openSettings()">
+                👥 Настройки учеников
+            </button>
+        </section>
+
+        <nav id="navigation"></nav>
+
+    </div>
+
+    <footer class="clock-panel">
+
+        <div class="label">АЛМАТЫ · UTC+5</div>
+
+        <strong id="clock">00:00:00</strong>
+
+        <div id="date"></div>
+
+        <div class="signature">BY DARKHAN</div>
+
+    </footer>
+
+</aside>
+
+<main>
+
+    <header class="topbar">
+        <div>
+            <h2>Русский язык и литература</h2>
+            <p>Раздел 2. Человек и Родина</p>
+        </div>
+
+        <span id="lessonBadge">ТЕОРИЯ</span>
+    </header>
+
+    <div class="progress-track">
+        <div id="progress"></div>
+    </div>
+
+    <section id="bookArea">
+        <article id="page">
+            Загрузка учебника...
+        </article>
+    </section>
+
+</main>
+
+<button id="restoreMenu"
+        onclick="toggleMenu()"
+        aria-label="Открыть меню">
+    ☰
+</button>
+
+<!-- НАСТРОЙКИ УЧЕНИКОВ -->
+
+<dialog id="settingsDialog">
+
+    <div class="dialog-header">
+        <button onclick="closeSettings()">✕</button>
+        <h2>Настройки занятия</h2>
+    </div>
+
+    <label for="studentCount">
+        Количество присутствующих
+    </label>
+
+    <div class="counter">
+
+        <button onclick="changeCount(-1)">−</button>
+
+        <input id="studentCount"
+               type="number"
+               min="0"
+               max="25"
+               value="12"
+               oninput="previewSettings()">
+
+        <button onclick="changeCount(1)">+</button>
+
+    </div>
+
+    <div class="quick-count">
+
+        <button onclick="setCount(6)">6</button>
+        <button onclick="setCount(8)">8</button>
+        <button onclick="setCount(10)">10</button>
+        <button onclick="setCount(12)">12</button>
+        <button onclick="setCount(13)">13</button>
+        <button onclick="setCount(15)">15</button>
+        <button onclick="setCount(24)">24</button>
+        <button onclick="setCount(25)">25</button>
+
+    </div>
+
+    <div id="settingsPreview"></div>
+
+    <p class="small">
+        Все ученики работают самостоятельно
+        в тетрадях и отвечают со своих мест.
+        Имена вводить не нужно.
+    </p>
+
+    <button class="primary" onclick="saveSettings()">
+        Сохранить настройки
+    </button>
+
+</dialog>
+
+<!-- ПРОСМОТР ИЗОБРАЖЕНИЙ -->
+
+<dialog id="photoDialog">
+
+    <button class="primary" onclick="closePhoto()">
+        ← Вернуться к учебнику
+    </button>
+
+    <img id="largePhoto" alt="Увеличенное изображение">
+
+    <p id="photoCaption"></p>
+
+</dialog>
+
+<div id="notification" role="status"></div>
+
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9.1.1 | День, когда рухнул мир</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<button id="restoreMenu" onclick="toggleMenu()">☰</button>
+
+<aside id="sidebar">
+    <header class="brand">
+        <div class="logo">📖</div>
+        <h2>РУССКИЙ ЯЗЫК</h2>
+        <p>И ЛИТЕРАТУРА</p>
+        <small>1 КУРС · 80 МИНУТ</small>
+    </header>
+
+    <div class="sidebar-scroll">
+
+        <section class="panel">
+            <strong id="pageNumber"></strong>
+            <div class="two">
+                <button id="prev" onclick="move(-1)">← Назад</button>
+                <button id="next" onclick="move(1)">Далее →</button>
+            </div>
+        </section>
+
+        <section class="panel" id="actions"></section>
+
+        <section class="panel">
+            <div class="label">МАСШТАБ</div>
+            <div class="zoom">
+                <button onclick="changeZoom(-10)">−</button>
+                <strong id="zoomValue">100%</strong>
+                <button onclick="changeZoom(10)">+</button>
+            </div>
+            <button onclick="resetZoom()">Сброс масштаба</button>
+            <button onclick="fullscreen()">⛶ Полный экран</button>
+            <button onclick="toggleMenu()">◀ Скрыть меню</button>
+        </section>
+
+        <section class="panel">
+            <div class="label">ТАЙМЕР ЗАНЯТИЯ</div>
+            <strong id="timer">80:00</strong>
+            <div id="timerStage">Урок №53: 40:00</div>
+            <div class="two">
+                <button id="timerButton" onclick="toggleTimer()">Старт</button>
+                <button onclick="resetTimer()">Сброс</button>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="label">ПРИСУТСТВУЮТ</div>
+            <strong id="attendance">24 / 25</strong>
+            <button onclick="openSettings()">👥 Настройки учеников</button>
+        </section>
+
+        <section class="panel">
+            <div class="label">ИНСТРУМЕНТЫ</div>
+            <button onclick="openBoard()">✎ Интерактивная доска</button>
+            <button onclick="openGlossary()">📚 Словарь терминов</button>
+        </section>
+
+        <nav id="navigation"></nav>
+    </div>
+
+    <footer class="clock-panel">
+        <div class="label">АЛМАТЫ · UTC+5</div>
+        <strong id="clock">00:00:00</strong>
+        <div id="date"></div>
+        <div class="signature">BY DARKHAN</div>
+    </footer>
+</aside>
+
+<main>
+    <header class="topbar">
+        <div>
+            <h2>Русский язык и литература</h2>
+            <p>Раздел 9. Экология и биоресурсы</p>
+        </div>
+        <span id="lessonBadge">УРОК №53</span>
+    </header>
+
+    <div class="progress-track">
+        <div id="progress"></div>
+    </div>
+
+    <section id="bookArea">
+        <article id="page">Загрузка учебника...</article>
+    </section>
+</main>
+
+<!-- НАСТРОЙКИ -->
+
+<dialog id="settingsDialog">
+    <div class="dialog-header">
+        <button onclick="closeDialog('settingsDialog')">✕</button>
+        <h2>Настройки занятия</h2>
+    </div>
+
+    <label for="studentCount">Количество учеников</label>
+
+    <div class="counter">
+        <button onclick="changeCount(-1)">−</button>
+
+        <input id="studentCount"
+               type="number"
+               min="0"
+               max="25"
+               value="24"
+               oninput="previewSettings()">
+
+        <button onclick="changeCount(1)">+</button>
+    </div>
+
+    <div class="quick-count" id="quickCount"></div>
+
+    <label for="lessonMode">Режим закрепления</label>
+
+    <select id="lessonMode" onchange="previewSettings()">
+        <option value="auto">Автоматический выбор</option>
+        <option value="team">Две команды</option>
+        <option value="individual">Индивидуальная работа</option>
+    </select>
+
+    <div id="settingsPreview"></div>
+
+    <p class="small">
+        Ученики остаются на своих местах.
+        Письменные задания выполняются в тетрадях.
+    </p>
+
+    <button class="primary" onclick="saveSettings()">
+        Сохранить настройки
+    </button>
+</dialog>
+
+<!-- ИНТЕРАКТИВНАЯ ДОСКА -->
+
+<dialog id="boardDialog" class="wide-dialog">
+    <div class="dialog-header">
+        <button onclick="closeDialog('boardDialog')">✕</button>
+        <h2>Интерактивная доска</h2>
+    </div>
+
+    <div class="board-layout">
+        <div class="board-tools">
+
+            <button class="blue-pen" onclick="setPen('#155bb5')">
+                Синий
+            </button>
+
+            <button class="red-pen" onclick="setPen('#bd2929')">
+                Красный
+            </button>
+
+            <button class="green-pen" onclick="setPen('#237747')">
+                Зелёный
+            </button>
+
+            <button class="black-pen" onclick="setPen('#222222')">
+                Чёрный
+            </button>
+
+            <button onclick="setPen('#ffffff')">Ластик</button>
+
+            <label for="penWidth">Толщина линии</label>
+
+            <input id="penWidth"
+                   type="range"
+                   min="2"
+                   max="25"
+                   value="5">
+
+            <button onclick="undoBoard()">↶ Отменить</button>
+            <button onclick="clearBoard()">Очистить доску</button>
+        </div>
+
+        <canvas id="boardCanvas" width="1400" height="800"></canvas>
+    </div>
+</dialog>
+
+<!-- СЛОВАРЬ -->
+
+<dialog id="glossaryDialog" class="wide-dialog">
+    <div class="dialog-header">
+        <button onclick="closeDialog('glossaryDialog')">✕</button>
+        <h2>Словарь литературных и экологических терминов</h2>
+    </div>
+    <div id="glossaryContent"></div>
+</dialog>
+
+<!-- ИЗОБРАЖЕНИЯ -->
+
+<dialog id="photoDialog" class="wide-dialog">
+    <button class="primary" onclick="closeDialog('photoDialog')">
+        ← Вернуться к учебнику
+    </button>
+    <img id="largePhoto" alt="Увеличенная иллюстрация">
+    <p id="photoCaption"></p>
+</dialog>
+
+<div id="notification" role="status"></div>
+
+</body>
+</html>
